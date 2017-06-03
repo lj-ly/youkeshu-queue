@@ -1,6 +1,5 @@
 <?php
 
-
 namespace queue;
 
 class Tools
