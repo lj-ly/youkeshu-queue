@@ -1,6 +1,6 @@
 {
-    "name": "yks/queue",
-    "description": "yks queue",
+    "name": "youkeshu/queue",
+    "description": "youkeshu queue",
     "authors": [
         {
             "name": "longli",
@@ -8,6 +8,9 @@
         }
     ],
     "require": {},
+    "require-dev" : {
+      "predis/predis": "^1.1"
+    },
     "autoload": {
         "psr-4": {"queue\\": "src/"}
     }
