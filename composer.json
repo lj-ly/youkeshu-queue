@@ -1,0 +1,14 @@
+{
+    "name": "yks/queue",
+    "description": "yks queue",
+    "authors": [
+        {
+            "name": "longli",
+            "email": "1589518286@qq.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {"queue\\": "src/"}
+    }
+}
