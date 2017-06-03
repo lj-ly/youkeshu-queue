@@ -7,9 +7,11 @@
             "email": "1589518286@qq.com"
         }
     ],
-    "require": {},
-    "require-dev" : {
+    "require": {
       "predis/predis": "^1.1"
+    },
+    "require-dev" : {
+      
     },
     "autoload": {
         "psr-4": {"queue\\": "src/"}
