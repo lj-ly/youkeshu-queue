@@ -1,45 +1,36 @@
 <?php
-/**
- * @link http://www.tintsoft.com/
- * @copyright Copyright (c) 2012 TintSoft Technology Co. Ltd.
- * @license http://www.tintsoft.com/license/
- */
 
 namespace queue\console;
-require_once(dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php');
 use queue\Tools;
-use queue\DbQueue;
-use queue\RedisQueue;
-
 
 /**
- * Job queue
+ * Class QueueListener
+ * @package queue\console
+ * @author longli
  */
 class QueueListener
 {
   /**
    * @var integer
-   * Delay after each step (in seconds)
+   * 进程睡眠多少毫秒
    */
   public $usleep = 200;
 
   /**
    * @var integer
-   * Delay before running first job in listening mode (in seconds)
+   * 执行超时时间，秒
    */
   public $_timeout;
 
-  public $_daemonize = false;
-
   /**
+   * 重新发布失败
    * @var bool
-   * Need restart job if failure or not
    */
   public $restartOnFailure = true;
 
   /**
+   * 队列名称
    * @var string
-   * Queue component ID
    */
   public $queue = 'default_queue';
 
@@ -53,9 +44,8 @@ class QueueListener
   }
 
   /**
-   * Process a job
-   *
-   * @param string $queue
+   * 执行队列一次
+   * @param string $queue 队列名称
    * @throws \Exception
    */
   public function work($queue)
@@ -64,9 +54,8 @@ class QueueListener
   }
 
   /**
-   * Continuously process jobs
-   *
-   * @param string $queue
+   * 监听队列
+   * @param string $queue 队列名称
    * @return bool
    * @throws \Exception
    */
@@ -89,9 +78,8 @@ class QueueListener
   }
 
   /**
-   * Process one unit of job in queue
-   *
-   * @param string $queue
+   * 队列进程
+   * @param string $queue 队列名称
    * @return bool
    */
   protected function process($queue)
@@ -102,7 +90,7 @@ class QueueListener
     {
       try
       {
-        /** @var \xutl\queue\ActiveJob $job */
+        /** @var \queue\ActiveJob $job */
         $job = call_user_func($message['body']['serializer'][1], $message['body']['object']);
 
         if($job->run() || (bool)$this->restartOnFailure === false)
@@ -123,10 +111,15 @@ class QueueListener
     return false;
   }
 
+  /**
+   * 进程池
+   * @var array
+   */
   private $workers = [];
 
   /**
-   * @param $queuqName
+   * 使用 swoole 运行多进程
+   * @param $queuqName 队列名称
    */
   protected function sProcess($queuqName)
   {
@@ -157,23 +150,33 @@ class QueueListener
     }
   }
 
+  /**
+   * 获取队列驱动
+   * @return \queue\QueueInterface
+   */
   private function getQueue()
   {
     return Tools::getQueue();
   }
 
+  /**
+   * 获取队列默认名称
+   * @return string
+   */
   public static function getDefaultQueueName()
   {
     $config = self::getConfig();
     return $config['queue']['queueName'];
   }
 
+  /**
+   * 获取配置文件
+   * @return array
+   */
   public static function getConfig()
   {
     return require(dirname(__DIR__) . '/config.php');
   }
 }
-
-new QueueListener();
 
 ?>

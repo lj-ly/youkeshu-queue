@@ -9,6 +9,11 @@
 
 namespace queue;
 
+/**
+ * Class DbDriver
+ * @package queue
+ * @author longli
+ */
 class DbDriver
 {
   /**

@@ -1,14 +1,11 @@
 <?php
-/**
- * @link http://www.tintsoft.com/
- * @copyright Copyright (c) 2012 TintSoft Technology Co. Ltd.
- * @license http://www.tintsoft.com/license/
- */
+
 namespace queue;
 
 /**
- * Class DatabaseQueue
- * @package xutl\queue
+ * Class DbQueue
+ * @package queue
+ * @author longli
  */
 class DbQueue implements QueueInterface
 {
@@ -40,9 +37,9 @@ class DbQueue implements QueueInterface
 
   /**
    * 推送任务到队列
-   * @param mixed $payload
-   * @param integer $delay
-   * @param string $queue
+   * @param mixed $payload  队列对象
+   * @param string $queue 队列名称
+   * @param integer $delay 多久执行
    * @return string
    */
   public function push(ActiveJob $payload, $queue = null, $delay = 0)
@@ -63,8 +60,7 @@ class DbQueue implements QueueInterface
   }
 
   /**
-   * 从队列弹出消息
-   *
+   * 从队列中出栈
    * @param string|null $queue 队列名称
    * @return array|false
    */
@@ -118,7 +114,8 @@ class DbQueue implements QueueInterface
   }
 
   /**
-   * @param  string|null $queue
+   * 从数据库从获取一条队列数据
+   * @param  string|null $queue 队列名称
    * @return array|null
    */
   protected function receiveMessage($queue)
@@ -136,8 +133,7 @@ class DbQueue implements QueueInterface
 
   /**
    * 清空队列
-   *
-   * @param string $queue
+   * @param string $queue 队列名称
    */
   public function purge($queue)
   {
@@ -146,10 +142,9 @@ class DbQueue implements QueueInterface
   }
 
   /**
-   * 发布消息
-   *
-   * @param array $message
-   * @param integer $delay
+   * 重新发布消息
+   * @param array $message 消息数据
+   * @param integer $delay 执行时间
    */
   public function release(array $message, $delay = 0)
   {
@@ -169,7 +164,7 @@ class DbQueue implements QueueInterface
 
   /**
    * 删除队列消息
-   * @param array $message
+   * @param array $message 删除的数据
    */
   public function delete(array $message)
   {

@@ -3,8 +3,9 @@
 
 return $__CONFIG = [
   'queue' => [
-    'class' => 'db',
-    'queueName' => 'default_queue',
+    'class' => 'db',  // 使用哪个驱动
+    'queueName' => 'default_queue',  // 队列名称
+    'num' => 0, // 跑多少个进程，默认20个
   ],
   'redis' => [
     'scheme' => 'tcp',
@@ -18,13 +19,13 @@ return $__CONFIG = [
     'default' => [
       //数据库连接参数
       'params' => [
-        'host'       => 'amazondbm.kokoerp.com',
-        'port'       => 3306,
-        'user'       => 'amazon',
-        'password'   => 'z7D1fnFkOA4WDGNW',
-        'database'   => 'amazon',
-        'charset'    => 'utf8',
-        'tableName' => 'adv_sys_queue'
+        'host'       => '',  // 数据库连接地址
+        'port'       => 3306, // 端口
+        'user'       => '',  // 用户名
+        'password'   => '', // 密码
+        'database'   => '',  // 数据库名
+        'charset'    => 'utf8',  // 编码
+        'tableName' => ''  // 队列表名
       ]
     ],
   ],

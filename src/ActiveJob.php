@@ -3,28 +3,32 @@
 namespace queue;
 
 /**
- * ActiveJob
- * @author Alexander Kochetov <creocoder@gmail.com>
+ * Class ActiveJob
+ * @package queue
+ * @author longli
  */
 abstract class ActiveJob
 {
     /**
+     * 序列化
      * @var array
      */
     public $serializer = ['serialize', 'unserialize'];
 
     /**
-     * Runs the job.
+     * 运行队列
+     * @return boolean
      */
     abstract public function run();
 
     /**
      * 检测数据的合法性
-     * @return bool
+     * @return boolean
      */
     abstract public function check();
 
     /**
+     * 获取队列名
      * @return string
      */
     public function queueName($queue = null)
@@ -38,6 +42,7 @@ abstract class ActiveJob
     }
 
     /**
+     * 获取队列实例
      * @return QueueInterface
      */
     public function getQueue()
@@ -46,8 +51,7 @@ abstract class ActiveJob
     }
 
     /**
-     * Pushs the job.
-     *
+     * 重新放入队列
      * @param integer $delay
      * @return string
      */

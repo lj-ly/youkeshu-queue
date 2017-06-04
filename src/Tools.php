@@ -2,6 +2,11 @@
 
 namespace queue;
 
+/**
+ * Class Tools
+ * @package queue
+ * @author longli
+ */
 class Tools
 {
   /**
