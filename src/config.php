@@ -5,7 +5,7 @@ return $__CONFIG = [
   'queue' => [
     'class' => 'db',  // 使用哪个驱动
     'queueName' => 'default_queue',  // 队列名称
-    'num' => 5, // 跑多少个进程，默认20个
+    'num' => 5, // 跑多少个进程，默认5个,可选值(1-20)
   ],
   'redis' => [
     'scheme' => 'tcp',

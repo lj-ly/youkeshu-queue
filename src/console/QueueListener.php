@@ -34,12 +34,19 @@ class QueueListener
    */
   public $queue = 'default_queue';
 
+  /**
+   * 进程数，windows只能用单进程
+   * @var int
+   */
+  public $workerNum = 0;
+
 
   public function __construct()
   {
-    $options = getopt('', ['queue::']);
-    if(!isset($options['queue']))
-      $this->queue = self::getDefaultQueueName();
+    $options = getopt('', ['queue::', 'worker::']);
+    $this->queue = !isset($options['queue']) ? self::getDefaultQueueName() : $options['queue'];
+    if(isset($options['worker']) && $options['worker'] > 0 && $options['worker'] < 21)
+      $this->workerNum = intval($options['worker']);
     $this->listen($this->queue);
   }
 
@@ -125,9 +132,13 @@ class QueueListener
   {
     ini_set('memory_limit', '1024M');
     $this->usleep *= 10;
-    $config = self::getConfig();
-    $workerNum = isset($config['queue']['num']) && $config['queue']['num'] > 0 ? $config['queue']['num'] : 20;
-    while($workerNum--)
+    if(empty($this->workerNum))
+    {
+      $config = self::getConfig();
+      $this->workerNum = isset($config['queue']['num']) && $config['queue']['num'] > 0
+      && $config['queue']['num'] < 21 ? $config['queue']['num'] : 5;
+    }
+    while($this->workerNum--)
     {
       $process = new \swoole_process(function(\swoole_process $process) use ($queuqName)
       {
