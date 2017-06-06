@@ -12,9 +12,9 @@ class QueueListener
 {
   /**
    * @var integer
-   * 进程睡眠多少毫秒
+   * 进程睡眠多少秒
    */
-  public $usleep = 200;
+  public $sleep = 1;
 
   /**
    * @var integer
@@ -78,7 +78,7 @@ class QueueListener
       {
         if(!$this->process($queue))
         {
-          usleep($this->usleep);
+          sleep($this->sleep);
         }
       }
     }
@@ -91,7 +91,6 @@ class QueueListener
    */
   protected function process($queue)
   {
-    usleep($this->usleep);
     $message = $this->getQueue()->pop($queue);
     if($message)
     {
@@ -131,7 +130,6 @@ class QueueListener
   protected function sProcess($queuqName)
   {
     ini_set('memory_limit', '1024M');
-    $this->usleep *= 10;
     if(empty($this->workerNum))
     {
       $config = self::getConfig();
@@ -142,7 +140,11 @@ class QueueListener
     {
       $process = new \swoole_process(function(\swoole_process $process) use ($queuqName)
       {
-        $this->process($queuqName);
+        while(true)
+        {
+          sleep($this->sleep);
+          $this->process($queuqName);
+        }
       });
       $pid = $process->start();
       $this->workers[$pid] = $process;
