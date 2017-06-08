@@ -12,9 +12,10 @@ class DbQueue implements QueueInterface
   public $db = 'db';
 
   /**
+   * 发布超过多少时间重新放入队列，如果为null则不放入
    * @var int|null
    */
-  protected $expire = null;
+  protected $expire = 600;
 
   /**
    * @var
@@ -69,12 +70,11 @@ class DbQueue implements QueueInterface
     if(!is_null($this->expire))
     {
       //将发布的消息重新放入队列
-      $expired = time() + $this->expire;
       $sql = "UPDATE {$this->tableName} SET reserved=0, reserved_at=null, attempts=attempts+1
-              WHERE queue=:queue AND reserved=1 AND reserved_at<=:expired";
+              WHERE queue=:queue AND reserved=1 AND reserved_at+{$this->expire}<=:time";
       $args = [
         ':queue' => $queue,
-        ':expired' => $expired
+        ':time' => time()
       ];
       $this->db->query($sql, $args);
     }
