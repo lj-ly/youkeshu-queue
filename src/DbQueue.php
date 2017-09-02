@@ -103,8 +103,8 @@ class DbQueue implements QueueInterface
       if($pdo != null)
       {
         $pdo->commit();
-        $pdo = null;
       }
+      $pdo = null;
     }
     catch(\PDOException $exception)
     {
