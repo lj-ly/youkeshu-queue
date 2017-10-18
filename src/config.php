@@ -6,6 +6,7 @@ return $__CONFIG = [
     'class' => 'db',  // 使用哪个驱动
     'queueName' => 'default_queue',  // 队列名称
     'num' => 5, // 跑多少个进程，默认5个,可选值(1-20)
+    'attempts' => 5, // 队列运行失败尝试次数
   ],
   'redis' => [
     'scheme' => 'tcp',
@@ -19,13 +20,13 @@ return $__CONFIG = [
     'default' => [
       //数据库连接参数
       'params' => [
-        'host'       => '',  // 数据库连接地址
+        'host'       => '127.0.0.1',  // 数据库连接地址
         'port'       => 3306, // 端口
-        'user'       => '',  // 用户名
-        'password'   => '', // 密码
-        'database'   => '',  // 数据库名
+        'user'       => 'root',  // 用户名
+        'password'   => 'Ab123456', // 密码
+        'database'   => 'test',  // 数据库名
         'charset'    => 'utf8',  // 编码
-        'tableName' => ''  // 队列表名
+        'tableName' => 'sys_queue'  // 队列表名
       ]
     ],
   ],
