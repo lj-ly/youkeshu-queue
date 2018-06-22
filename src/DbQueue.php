@@ -35,9 +35,9 @@ class DbQueue implements QueueInterface
   /**
    * @inheritdoc
    */
-  public function __construct()
+  public function __construct(QueueConfig $config)
   {
-    $this->config = require (__DIR__ . '/config.php');
+    $this->config = $config;
     $this->db = new DbDriver($this->config['db']);
     $this->db->setTableName($this->config['db']['default']['params']['tableName']);
     $this->tableName = $this->db->getTableName();

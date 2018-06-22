@@ -12,6 +12,6 @@
       "predis/predis": "^1.1"
     },
     "autoload": {
-        "psr-4": {"queue\\": "src/"}
+        "psr-4": {"queue\\": "src/","demo\\":"demo/"}
     }
 }

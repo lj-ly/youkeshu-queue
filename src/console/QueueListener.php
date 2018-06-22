@@ -1,6 +1,8 @@
 <?php
 
 namespace queue\console;
+
+use queue\QueueConfig;
 use queue\Tools;
 
 /**
@@ -39,12 +41,20 @@ class QueueListener
    * @var int
    */
   public $workerNum = 0;
+  /**
+   * @var array|QueueConfig
+   */
+  public $config = [];
 
-
+  /**
+   * QueueListener constructor.
+   * @throws \Exception
+   */
   public function __construct()
   {
+    $this->config = new QueueConfig();
     $options = getopt('', ['queue::', 'worker::']);
-    $this->queue = !isset($options['queue']) ? self::getDefaultQueueName() : $options['queue'];
+    $this->queue = !isset($options['queue']) ? $this->getDefaultQueueName() : $options['queue'];
     if(isset($options['worker']) && $options['worker'] > 0 && $options['worker'] < 21)
       $this->workerNum = intval($options['worker']);
     $this->listen($this->queue);
@@ -132,14 +142,13 @@ class QueueListener
     ini_set('memory_limit', '1024M');
     if(empty($this->workerNum))
     {
-      $config = self::getConfig();
+      $config = $this->config;
       $this->workerNum = isset($config['queue']['num']) && $config['queue']['num'] > 0
       && $config['queue']['num'] < 21 ? $config['queue']['num'] : 5;
     }
     while($this->workerNum--)
     {
-      $process = new \swoole_process(function(\swoole_process $process) use ($queuqName)
-      {
+      $process = new \swoole_process(function(\swoole_process $process) use ($queuqName) {
         while(true)
         {
           usleep($this->sleep);
@@ -166,30 +175,22 @@ class QueueListener
   /**
    * 获取队列驱动
    * @return \queue\QueueInterface
+   * @throws \Exception
    */
   private function getQueue()
   {
-    return Tools::getQueue();
+    return Tools::getQueue($this->config);
   }
 
   /**
    * 获取队列默认名称
    * @return string
    */
-  public static function getDefaultQueueName()
+  public function getDefaultQueueName()
   {
-    $config = self::getConfig();
-    return $config['queue']['queueName'];
+    return $this->config['queue']['queueName'];
   }
 
-  /**
-   * 获取配置文件
-   * @return array
-   */
-  public static function getConfig()
-  {
-    return require(dirname(__DIR__) . '/config.php');
-  }
 }
 
 ?>

@@ -14,15 +14,14 @@ class Tools
    * @return QueueInterface
    * @throws \Exception
    */
-  public static function getQueue()
+  public static function getQueue(QueueConfig $config)
   {
-    $config = require(__DIR__ . '/config.php');
-    switch($config['queue']['class'])
+    switch($config->getConfig('queue.class'))
     {
       case 'db':
-        return (new DbQueue());
+        return (new DbQueue($config));
       case 'redis';
-        return (new RedisQueue());
+        return (new RedisQueue($config));
       default:
         throw new \Exception("配置有误");
     }

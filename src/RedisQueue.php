@@ -24,15 +24,11 @@ class RedisQueue implements QueueInterface
   /**
    * @inheritdoc
    */
-  public function __construct()
+  public function __construct(QueueConfig $config)
   {
     if(!$this->redis instanceof Client)
     {
-      require_once __DIR__ . '/config.php';
-      /**
-       * @var  array $__CONFIG
-       */
-      $this->redis = new Client($__CONFIG['redis']);
+      $this->redis = new Client($config['redis']);
     }
   }
 
@@ -70,8 +66,7 @@ class RedisQueue implements QueueInterface
     foreach([':delayed', ':reserved'] as $type)
     {
       $options = ['cas' => true, 'watch' => $queue . $type];
-      $this->redis->transaction($options, function(MultiExec $transaction) use ($queue, $type)
-      {
+      $this->redis->transaction($options, function(MultiExec $transaction) use ($queue, $type) {
         $data = $this->redis->zrangebyscore($queue . $type, '-inf', $time = time());
 
         if(!empty($data))
